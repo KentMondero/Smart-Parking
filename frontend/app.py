@@ -647,5 +647,5 @@ with tab_profile:
             st.markdown(f'<div style="color:{MUTED};font-size:0.85rem;padding:12px 0;">{"No matching logs found." if search.strip() else "No parking logs yet."}</div>', unsafe_allow_html=True)
 
 # ── Auto-refresh (dashboard tab only) ────────────────────────────────────────
-time.sleep(REFRESH_INTERVAL)
-st.rerun()
+#time.sleep(REFRESH_INTERVAL)
+#st.rerun()

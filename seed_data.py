@@ -49,7 +49,8 @@ schedules = [
     {"student_id": "1234", "subject": "Basketball", "day_of_week": "Thursday",  "start_time": "01:00", "end_time": "23:00"},
     {"student_id": "1234", "subject": "Basketball", "day_of_week": "Friday",    "start_time": "01:00", "end_time": "23:00"},
     {"student_id": "1234", "subject": "Basketball", "day_of_week": "Saturday",  "start_time": "01:00", "end_time": "23:00"},
-    
+    {"student_id": "1234", "subject": "Basketball", "day_of_week": "Sunday",  "start_time": "01:00", "end_time": "23:00"},
+
     # Kent  
     {"student_id": "2024-200354", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
     {"student_id": "2024-200354", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
