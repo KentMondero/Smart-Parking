@@ -1,10 +1,10 @@
-# 🅿️ UniPark — Smart Parking Management System
+# Park U — Smart Parking Management System
 
 A full-stack university parking system built with **FastAPI** (backend), **SQLite** (database), and **Streamlit** (frontend dashboard).
 
 ---
 
-## 📁 Folder Structure
+## Folder Structure
 
 ```
 smart-parking/
@@ -30,7 +30,7 @@ smart-parking/
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Install dependencies
 
@@ -67,7 +67,7 @@ Dashboard opens at: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-## 🧠 Parking Decision Logic
+## Parking Decision Logic
 
 | Has Class Today | Slots Available | Result |
 |---|---|---|
@@ -78,7 +78,7 @@ Dashboard opens at: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-## 📡 API Endpoints
+## API Endpoints
 
 ### Students
 | Method | Endpoint | Description |
@@ -107,24 +107,7 @@ Dashboard opens at: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-## 🧪 Test with Sample Students
-
-| Student ID | Name | Has Class Today |
-|---|---|---|
-| STU001 | Alice Reyes | ✅ Yes |
-| STU002 | Ben Santos | ✅ Yes |
-| STU003 | Clara Dizon | ✅ Yes |
-| STU004 | Dan Lim | ❌ No |
-| STU005 | Eva Mercado | ✅ Yes |
-| STU006 | Franco dela Cruz | ❌ No |
-| STU007 | Grace Tan | ✅ Yes |
-| STU008 | Hiro Nakamura | ❌ No |
-
-> Note: "Has Class Today" reflects the **actual current day** when seed_data.py is run.
-
----
-
-## 🎨 Frontend Features
+## Frontend Features
 
 - **Live Stats Bar** — Total / Available / Occupied slot counts
 - **Visual Slot Map** — Green = available, Red = occupied
