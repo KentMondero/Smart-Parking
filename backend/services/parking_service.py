@@ -8,19 +8,38 @@ def get_today_name() -> str:
     """Return today's day name, e.g. 'Monday'."""
     return datetime.now().strftime("%A")
 
-
 def student_has_class_today(db: Session, student_id: str) -> bool:
     """Check whether the student has any class scheduled for today."""
     today = get_today_name()
-    schedule = (
+    schedules = (
         db.query(ClassSchedule)
         .filter(
             ClassSchedule.student_id == student_id,
             ClassSchedule.day_of_week == today,
         )
-        .first()
+        .all()
     )
-    return schedule is not None
+    return len(schedules) > 0
+
+
+def student_has_class_now(db: Session, student_id: str) -> bool:
+    """Check whether the student has a class happening right now (time-based)."""
+    today = get_today_name()
+    now   = datetime.now().strftime("%H:%M")
+
+    schedules = (
+        db.query(ClassSchedule)
+        .filter(
+            ClassSchedule.student_id == student_id,
+            ClassSchedule.day_of_week == today,
+        )
+        .all()
+    )
+
+    for schedule in schedules:
+        if schedule.start_time <= now <= schedule.end_time:
+            return True
+    return False
 
 
 def get_available_slots(db: Session):
@@ -79,12 +98,14 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
             has_class_today=student_has_class_today(db, request.student_id),
         )
 
-    has_class = student_has_class_today(db, request.student_id)
+    has_class_today = student_has_class_today(db, request.student_id)
+    has_class_now   = student_has_class_now(db, request.student_id)
+    has_class       = has_class_today    
     available_slots = get_available_slots(db)
     available_count = len(available_slots)
 
-    # ── Case 3: No class + no slots ───────────────────────────────────────────
-    if not has_class and available_count == 0:
+    # ── Case 3: No class today + no slots ────────────────────────────────────
+    if not has_class_today and available_count == 0:
         message = "You cannot park and you don't have classes for today"
         log = ParkingLog(
             student_id=request.student_id,
@@ -101,8 +122,10 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
         slot = available_slots[0]
         slot.status = "occupied"
 
-        if has_class:
-            message = "You may park and you have classes today"
+        if has_class_now:
+            message = "You may park and you have an ongoing class right now"
+        elif has_class_today:
+            message = "You may park and you have classes scheduled later today"
         else:
             message = "You may park but you don't have classes today"
 
@@ -123,8 +146,11 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
             has_class_today=has_class,
         )
 
-   # ── Case 4: Has class but no slots — waiting/chance ───────────────────────
-    message = "No slots available but you have classes today. You may bring your vehicle and wait for an available slot."
+    # ── Case 4: Has class but no slots ───────────────────────────────────────
+    if has_class_now:
+        message = "No slots available but you have an ongoing class. You may bring your vehicle and wait for an available slot."
+    else:
+        message = "No slots available but you have classes later today. You may bring your vehicle and wait for an available slot."
     log = ParkingLog(
         student_id=request.student_id,
         slot_id=None,
