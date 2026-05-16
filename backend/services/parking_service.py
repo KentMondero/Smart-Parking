@@ -208,6 +208,6 @@ def release_parking_slot(db: Session, student_id: str) -> dict:
     if slot:
         slot.status = "available"
         db.commit()
-        return {"success": True, "message": f"Slot {slot.slot_name} has been released."}
+        return {"success": True, "message": f"{slot.slot_name} has been released."}
 
     return {"success": False, "message": "Slot not found."}

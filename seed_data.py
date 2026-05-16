@@ -52,50 +52,50 @@ schedules = [
     
     # Kent  
     {"student_id": "2024-200354", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200354", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "9:00", "end_time": "12:00"},
-    {"student_id": "2024-200354", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "9:00", "end_time": "12:00"},
+    {"student_id": "2024-200354", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200354", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200354", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200354", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "7:00", "end_time": "12:00"},
+    {"student_id": "2024-200354", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "70:00", "end_time": "12:00"},
     {"student_id": "2024-200354", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
     # Jerome 
     {"student_id": "2024-200372", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200372", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "9:00", "end_time": "12:00"},
-    {"student_id": "2024-200372", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "9:00", "end_time": "12:00"},
+    {"student_id": "2024-200372", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200372", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200372", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200372", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "7:00", "end_time": "12:00"},
+    {"student_id": "2024-200372", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
     {"student_id": "2024-200372", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
     
     # Rafael
     {"student_id": "2024-200413", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "9:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "9:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "7:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
     # Lorenz
     {"student_id": "2024-200413", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "9:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "9:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "7:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
    # Lyca
     {"student_id": "2024-200413", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "9:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "9:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "7:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
    # Joshua
     {"student_id": "2024-200413", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "9:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "9:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "7:00", "end_time": "12:00"},
+    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
     {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 ]
 
