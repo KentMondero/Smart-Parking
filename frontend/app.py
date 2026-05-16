@@ -515,7 +515,73 @@ with tab_profile:
 
         st.markdown("<br>", unsafe_allow_html=True)
 
-    # ── Parking Logs ──────────────────────────────────────────────────────────
+        # ── STEP 1: Student Profile Search (MOVED HERE) ──────────────────────────
+        pid_col, btn_col = st.columns([3, 1])
+        with pid_col:
+            profile_id = st.text_input("Student ID", placeholder="Enter Student ID to look up", key="profile_id")
+        with btn_col:
+            st.markdown("<br>", unsafe_allow_html=True)
+            lookup = st.button("Look Up", key="profile_lookup")
+
+        if lookup and profile_id.strip():
+            profile = api_get(f"/parking/profile/{profile_id.strip()}")
+
+            if not profile:
+                st.markdown('<div class="response-error">Student not found. Make sure the ID is correct and the student has used the system at least once.</div>', unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div class="profile-card">
+                    <p class="profile-name"> {profile['name']}</p>
+                    <p class="profile-meta">
+                        {profile['student_id']} &nbsp;|&nbsp;
+                        {profile.get('course') or 'N/A'} &nbsp;|&nbsp;
+                        Year {profile.get('year_level') or 'N/A'}
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
+
+                s1, s2, s3 = st.columns(3)
+                with s1:
+                    st.markdown(f'<div class="stat-card"><div class="stat-number" style="color:#818cf8">{profile["total_requests"]}</div><div class="stat-label">Total Requests</div></div>', unsafe_allow_html=True)
+                with s2:
+                    st.markdown(f'<div class="stat-card"><div class="stat-number" style="color:#34d399">{profile["approved"]}</div><div class="stat-label">Approved</div></div>', unsafe_allow_html=True)
+                with s3:
+                    st.markdown(f'<div class="stat-card"><div class="stat-number" style="color:#f87171">{profile["denied"]}</div><div class="stat-label">Denied</div></div>', unsafe_allow_html=True)
+
+                st.markdown("<br>", unsafe_allow_html=True)
+                st.markdown('<p class="section-title">Parking History</p>', unsafe_allow_html=True)
+
+                history = profile.get("history", [])
+                if history:
+                    st.markdown(f"""
+                    <div class="log-header" style="grid-template-columns:0.6fr 0.8fr 1.2fr 2fr;">
+                        <span>#</span><span>Slot</span><span>Date & Time</span><span>Result</span>
+                    </div>""", unsafe_allow_html=True)
+                    for entry in history:
+                        badge = f'<span style="font-size:0.65rem;padding:2px 7px;border-radius:20px;{BADGE_CLS}">CLASS</span>' if entry["has_class_today"] else f'<span style="font-size:0.65rem;padding:2px 7px;border-radius:20px;{BADGE_NOCLS}">NO CLASS</span>'
+                        slot_color = "#818cf8" if entry["slot_name"] != "N/A" else MUTED
+                        st.markdown(f"""
+                        <div class="log-row" style="grid-template-columns:0.6fr 0.8fr 1.2fr 2fr;">
+                            <span style="color:{MUTED};font-family:\'Space Mono\',monospace;font-size:0.72rem">#{entry['log_id']}</span>
+                            <span style="font-family:\'Space Mono\',monospace;color:{slot_color}">{entry['slot_name']}</span>
+                            <span style="color:{MUTED};font-size:0.72rem">{entry['request_time']}</span>
+                            <span>{badge} <span style="font-size:0.75rem;color:{SECTION_CLR}">{entry['response_message'][:50]}</span></span>
+                        </div>""", unsafe_allow_html=True)
+                else:
+                    st.markdown(f'<div style="color:{MUTED};font-size:0.85rem;padding:12px 0;">No parking history found for this student.</div>', unsafe_allow_html=True)
+
+        elif lookup:
+            st.markdown('<div class="response-warning">Please enter a Student ID.</div>', unsafe_allow_html=True)
+        else:
+            st.markdown(f'<div style="color:{MUTED};font-size:0.85rem;padding:20px 0;text-align:center;">Enter a Student ID above and click Look Up to view their parking history.</div>', unsafe_allow_html=True)
+
+
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.markdown("---", unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
+
+
+        # ── STEP 2: Parking Logs (MOVED HERE) ────────────────────────────────────
         st.markdown('<p class="section-title">Parking Logs</p>', unsafe_allow_html=True)
 
         logs = fetch_logs()
@@ -576,70 +642,6 @@ with tab_profile:
                 st.markdown(f'<div style="font-size:0.72rem;color:{MUTED};margin-top:6px;font-family:\'Space Mono\',monospace;">{len(filtered)} result(s) found</div>', unsafe_allow_html=True)
         else:
             st.markdown(f'<div style="color:{MUTED};font-size:0.85rem;padding:12px 0;">{"No matching logs found." if search.strip() else "No parking logs yet."}</div>', unsafe_allow_html=True)
-
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown("---", unsafe_allow_html=True)
-        st.markdown("<br>", unsafe_allow_html=True)
-
-    # ── Student Profile search  ─────────────
-        pid_col, btn_col = st.columns([3, 1])
-        with pid_col:
-            profile_id = st.text_input("Student ID", placeholder="Enter Student ID to look up", key="profile_id")
-        with btn_col:
-            st.markdown("<br>", unsafe_allow_html=True)
-            lookup = st.button("Look Up", key="profile_lookup")
-
-        if lookup and profile_id.strip():
-            profile = api_get(f"/parking/profile/{profile_id.strip()}")
-
-            if not profile:
-                st.markdown('<div class="response-error">Student not found. Make sure the ID is correct and the student has used the system at least once.</div>', unsafe_allow_html=True)
-            else:
-                st.markdown(f"""
-                <div class="profile-card">
-                    <p class="profile-name"> {profile['name']}</p>
-                    <p class="profile-meta">
-                        {profile['student_id']} &nbsp;|&nbsp;
-                        {profile.get('course') or 'N/A'} &nbsp;|&nbsp;
-                        Year {profile.get('year_level') or 'N/A'}
-                    </p>
-                </div>
-                """, unsafe_allow_html=True)
-
-                s1, s2, s3 = st.columns(3)
-                with s1:
-                    st.markdown(f'<div class="stat-card"><div class="stat-number" style="color:#818cf8">{profile["total_requests"]}</div><div class="stat-label">Total Requests</div></div>', unsafe_allow_html=True)
-                with s2:
-                    st.markdown(f'<div class="stat-card"><div class="stat-number" style="color:#34d399">{profile["approved"]}</div><div class="stat-label">Approved</div></div>', unsafe_allow_html=True)
-                with s3:
-                    st.markdown(f'<div class="stat-card"><div class="stat-number" style="color:#f87171">{profile["denied"]}</div><div class="stat-label">Denied</div></div>', unsafe_allow_html=True)
-
-                st.markdown("<br>", unsafe_allow_html=True)
-                st.markdown('<p class="section-title">Parking History</p>', unsafe_allow_html=True)
-
-                history = profile.get("history", [])
-                if history:
-                    st.markdown(f"""
-                    <div class="log-header" style="grid-template-columns:0.6fr 0.8fr 1.2fr 2fr;">
-                        <span>#</span><span>Slot</span><span>Date & Time</span><span>Result</span>
-                    </div>""", unsafe_allow_html=True)
-                    for entry in history:
-                        badge = f'<span style="font-size:0.65rem;padding:2px 7px;border-radius:20px;{BADGE_CLS}">CLASS</span>' if entry["has_class_today"] else f'<span style="font-size:0.65rem;padding:2px 7px;border-radius:20px;{BADGE_NOCLS}">NO CLASS</span>'
-                        slot_color = "#818cf8" if entry["slot_name"] != "N/A" else MUTED
-                        st.markdown(f"""
-                        <div class="log-row" style="grid-template-columns:0.6fr 0.8fr 1.2fr 2fr;">
-                            <span style="color:{MUTED};font-family:'Space Mono',monospace;font-size:0.72rem">#{entry['log_id']}</span>
-                            <span style="font-family:'Space Mono',monospace;color:{slot_color}">{entry['slot_name']}</span>
-                            <span style="color:{MUTED};font-size:0.72rem">{entry['request_time']}</span>
-                            <span>{badge} <span style="font-size:0.75rem;color:{SECTION_CLR}">{entry['response_message'][:50]}</span></span>
-                        </div>""", unsafe_allow_html=True)
-                else:
-                    st.markdown(f'<div style="color:{MUTED};font-size:0.85rem;padding:12px 0;">No parking history found for this student.</div>', unsafe_allow_html=True)
-
-        elif lookup:
-            st.markdown('<div class="response-warning">Please enter a Student ID.</div>', unsafe_allow_html=True)
-        else:
-            st.markdown(f'<div style="color:{MUTED};font-size:0.85rem;padding:20px 0;text-align:center;">Enter a Student ID above and click Look Up to view their parking history.</div>', unsafe_allow_html=True)
 
 # ── Auto-refresh (dashboard tab only) ────────────────────────────────────────
 #time.sleep(REFRESH_INTERVAL)
