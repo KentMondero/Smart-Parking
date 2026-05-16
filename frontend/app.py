@@ -279,6 +279,7 @@ header {{visibility: hidden;}}
 
 /* ── Input overrides ── */
 .stTextInput > label {{ color: {MUTED} !important; font-size: 0.78rem !important; font-family: 'Space Mono', monospace !important; text-transform: uppercase; letter-spacing: 1px; }}
+
 .stTextInput > div > div > input {{
     background: {INPUT_BG} !important;
     border: 1px solid {INPUT_BDR} !important;
@@ -287,10 +288,10 @@ header {{visibility: hidden;}}
     font-family: 'Space Mono', monospace !important;
 }}
 
-.stTextInput > div > div > input::placeholder {
-        color: {MUTED} !important;
-        opacity: 0.7 !important;
-}
+.stTextInput > div > div > input::placeholder {{
+    color: {MUTED} !important;
+    opacity: 0.7 !important;
+}}
 
 .stTextInput > div > div > input:focus {{ border-color: #6366f1 !important; box-shadow: 0 0 0 2px rgba(99,102,241,0.2) !important; }}
 .stButton > button {{
