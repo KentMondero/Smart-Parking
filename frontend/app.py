@@ -21,7 +21,8 @@ def get_logo():
     except:
         return "🏫"
 # ── Config ────────────────────────────────────────────────────────────────────
-API_BASE = "http://localhost:8000"
+import os
+API_BASE = os.environ.get("BACKEND_URL", "http://localhost:8000")
 REFRESH_INTERVAL = 5
 
 st.set_page_config(
