@@ -422,8 +422,18 @@ with tab_dashboard:
                         msg     = result.get("message", "")
                         slot    = result.get("slot_name")
                         success = result.get("success", False)
-                        css     = "response-success" if success else ("response-error" if "cannot" in msg.lower() else "response-warning")
-                        icon    = "" if success else ("" if "cannot" in msg.lower() else "")
+                        if success:
+                            css  = "response-success"
+                            icon = "✅"
+                        elif "cannot" in msg.lower():
+                            css  = "response-error"
+                            icon = "🚫"
+                        elif "wait" in msg.lower() or "chance" in msg.lower():
+                            css  = "response-warning"
+                            icon = "⏳"
+                        else:
+                            css  = "response-warning"
+                            icon = "⚠️"
                         slot_html = f'<div class="slot-assigned">Assigned: {slot}</div>' if slot else ""
                         st.markdown(f'<div class="{css}">{icon} {msg}{slot_html}</div>', unsafe_allow_html=True)
                     else:

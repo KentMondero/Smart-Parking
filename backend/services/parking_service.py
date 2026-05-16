@@ -60,6 +60,7 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
     Case 1 – Priority   : has class today + slot available  → park, priority message
     Case 2 – Non-priority: no class today + slot available  → park, non-priority message
     Case 3 – Denied     : no class today + no slots left    → deny
+    Case 4 – Waitlisted : has class today + no slots left   → waiting
     """
 
     # ── Auto-register student if not in DB ───────────────────────────────────
@@ -122,8 +123,8 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
             has_class_today=has_class,
         )
 
-    # ── Fallback: has class but no slots ──────────────────────────────────────
-    message = "No parking slots available at the moment. Please try again later."
+   # ── Case 4: Has class but no slots — waiting/chance ───────────────────────
+    message = "No slots available but you have classes today. You may bring your vehicle and wait for an available slot."
     log = ParkingLog(
         student_id=request.student_id,
         slot_id=None,

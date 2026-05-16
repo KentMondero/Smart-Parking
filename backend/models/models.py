@@ -22,9 +22,9 @@ class ClassSchedule(Base):
     schedule_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     student_id = Column(String, ForeignKey("students.student_id"), nullable=False)
     subject = Column(String, nullable=False)
-    day_of_week = Column(String, nullable=False)  # Monday, Tuesday, etc.
-    start_time = Column(String, nullable=False)   # "08:00"
-    end_time = Column(String, nullable=False)     # "10:00"
+    day_of_week = Column(String, nullable=False)  
+    start_time = Column(String, nullable=False)   
+    end_time = Column(String, nullable=False)     
 
     student = relationship("Student", back_populates="schedules")
 
@@ -34,7 +34,7 @@ class ParkingSlot(Base):
 
     slot_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     slot_name = Column(String, unique=True, nullable=False)
-    status = Column(String, default="available")  # available / occupied
+    status = Column(String, default="available")  
 
     parking_logs = relationship("ParkingLog", back_populates="slot")
 

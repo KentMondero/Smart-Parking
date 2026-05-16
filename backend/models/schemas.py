@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
 
-
 # ── Student Schemas ──────────────────────────────────────────────────────────
 
 class StudentCreate(BaseModel):
@@ -27,9 +26,9 @@ class StudentOut(BaseModel):
 class ScheduleCreate(BaseModel):
     student_id: str
     subject: str
-    day_of_week: str   # e.g. "Monday"
-    start_time: str    # e.g. "08:00"
-    end_time: str      # e.g. "10:00"
+    day_of_week: str  
+    start_time: str    
+    end_time: str      
 
 
 class ScheduleOut(BaseModel):
