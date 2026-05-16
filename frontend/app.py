@@ -26,7 +26,7 @@ API_BASE = os.environ.get("BACKEND_URL", "http://localhost:8000")
 REFRESH_INTERVAL = 5
 
 st.set_page_config(
-    page_title="UniPark — Smart Parking System",
+    page_title="Park-U — Smart Parking System",
     page_icon=Image.open("frontend/Logo.png"),
     layout="wide",
     initial_sidebar_state="collapsed",
