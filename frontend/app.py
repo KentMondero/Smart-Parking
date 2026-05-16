@@ -10,8 +10,11 @@ import time
 import csv
 import io
 from datetime import datetime
+import pytz
 from PIL import Image
 import base64
+
+PH_TZ = pytz.timezone("Asia/Manila")
 
 def get_logo():
     try:
@@ -347,7 +350,7 @@ with header_col:
             <div>
                 <p style="font-size:2.5rem;font-weight:800;letter-spacing:-0.5px;color:#ffffff;margin:0;">Park-U</p>
                 <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:3px 0 0 0;font-family:'Space Mono',monospace;">
-                    Smart Parking Management System &nbsp;|&nbsp; {datetime.now().strftime("%A, %B %d %Y")}
+                    Smart Parking Management System &nbsp;|&nbsp; {datetime.now(PH_TZ).strftime("%A, %B %d %Y")}
                 </p>
             </div>
         </div>
@@ -478,7 +481,7 @@ with tab_dashboard:
     st.markdown("<br>", unsafe_allow_html=True)
     fc1, fc2 = st.columns([3, 1])
     with fc1:
-        st.markdown(f'<span style="color:{MUTED};font-size:0.7rem;font-family:\'Space Mono\',monospace;">Last updated: {datetime.now().strftime("%H:%M:%S")} &nbsp;|&nbsp; Auto-refreshes every {REFRESH_INTERVAL}s</span>', unsafe_allow_html=True)
+        st.markdown(f'<span style="color:{MUTED};font-size:0.7rem;font-family:\'Space Mono\',monospace;">Last updated: {datetime.now(PH_TZ).strftime("%A, %B %d %Y")} &nbsp;|&nbsp; Auto-refreshes every {REFRESH_INTERVAL}s</span>', unsafe_allow_html=True)
     with fc2:
         if st.button("Refresh"):
             st.rerun()
@@ -607,7 +610,7 @@ with tab_profile:
                     st.download_button(
                         label="Download",
                         data=buf.getvalue(),
-                        file_name=f"parking_logs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        file_name=f"parking_logs_{datetime.now(PH_TZ).strftime("%A, %B %d %Y")}.csv",
                         mime="text/csv",
                         key="csv_dl",
                     )

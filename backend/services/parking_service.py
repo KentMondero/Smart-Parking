@@ -2,11 +2,13 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from backend.models.models import Student, ClassSchedule, ParkingSlot, ParkingLog
 from backend.models.schemas import ParkingRequest, ParkingResponse
+from datetime import datetime
+import pytz
 
+PH_TZ = pytz.timezone("Asia/Manila")
 
 def get_today_name() -> str:
-    return datetime.now().strftime("%A")
-
+    return datetime.now(PH_TZ).strftime("%A")
 
 def student_has_class_today(db: Session, student_id: str) -> bool:
     """Check whether the student has any class scheduled for today."""
@@ -25,7 +27,7 @@ def student_has_class_today(db: Session, student_id: str) -> bool:
 def student_has_class_now(db: Session, student_id: str) -> bool:
     """Check whether the student has a class happening right now (time-based)."""
     today = get_today_name()
-    now   = datetime.now().strftime("%H:%M")
+    now   = datetime.now(PH_TZ).strftime("%H:%M")
 
     schedules = (
         db.query(ClassSchedule)
@@ -45,7 +47,7 @@ def student_has_class_now(db: Session, student_id: str) -> bool:
 def student_has_class_later(db: Session, student_id: str) -> bool:
     """Check whether the student has a class still coming up later today."""
     today = get_today_name()
-    now   = datetime.now().strftime("%H:%M")
+    now   = datetime.now(PH_TZ).strftime("%H:%M")
 
     schedules = (
         db.query(ClassSchedule)
