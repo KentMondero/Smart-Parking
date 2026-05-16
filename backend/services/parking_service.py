@@ -5,8 +5,8 @@ from backend.models.schemas import ParkingRequest, ParkingResponse
 
 
 def get_today_name() -> str:
-    """Return today's day name, e.g. 'Monday'."""
     return datetime.now().strftime("%A")
+
 
 def student_has_class_today(db: Session, student_id: str) -> bool:
     """Check whether the student has any class scheduled for today."""
@@ -42,6 +42,26 @@ def student_has_class_now(db: Session, student_id: str) -> bool:
     return False
 
 
+def student_has_class_later(db: Session, student_id: str) -> bool:
+    """Check whether the student has a class still coming up later today."""
+    today = get_today_name()
+    now   = datetime.now().strftime("%H:%M")
+
+    schedules = (
+        db.query(ClassSchedule)
+        .filter(
+            ClassSchedule.student_id == student_id,
+            ClassSchedule.day_of_week == today,
+        )
+        .all()
+    )
+
+    for schedule in schedules:
+        if schedule.start_time > now:
+            return True
+    return False
+
+
 def get_available_slots(db: Session):
     return (
         db.query(ParkingSlot)
@@ -50,16 +70,7 @@ def get_available_slots(db: Session):
     )
 
 
-def count_available_slots(db: Session) -> int:
-    return (
-        db.query(ParkingSlot)
-        .filter(ParkingSlot.status == "available")
-        .count()
-    )
-
-
 def is_student_already_parked(db: Session, student_id: str) -> bool:
-    """Prevent duplicate parking — check if student already has an active slot."""
     active_log = (
         db.query(ParkingLog)
         .join(ParkingSlot, ParkingLog.slot_id == ParkingSlot.slot_id, isouter=True)
@@ -74,12 +85,12 @@ def is_student_already_parked(db: Session, student_id: str) -> bool:
 
 def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResponse:
     """
-    Core decision engine.
-
-    Case 1 – Priority   : has class today + slot available  → park, priority message
-    Case 2 – Non-priority: no class today + slot available  → park, non-priority message
-    Case 3 – Denied     : no class today + no slots left    → deny
-    Case 4 – Waitlisted : has class today + no slots left   → waiting
+    Case 1a – Has ongoing class now + slot available   → park, ongoing class message
+    Case 1b – Has class later today + slot available   → park, later class message
+    Case 2  – No active/upcoming class + slot available→ park, no class message
+    Case 3  – No active/upcoming class + no slots      → denied
+    Case 4a – Has ongoing class now + no slots         → waitlisted
+    Case 4b – Has class later today + no slots         → waitlisted
     """
 
     # ── Auto-register student if not in DB ───────────────────────────────────
@@ -98,24 +109,33 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
             has_class_today=student_has_class_today(db, request.student_id),
         )
 
-    has_class_today = student_has_class_today(db, request.student_id)
+    # ── Evaluate class status ─────────────────────────────────────────────────
     has_class_now   = student_has_class_now(db, request.student_id)
-    has_class       = has_class_today    
+    has_class_later = student_has_class_later(db, request.student_id)
+    has_class_today = student_has_class_today(db, request.student_id)
+
+    # Priority = has an ongoing OR upcoming class (not already finished)
+    is_priority = has_class_now or has_class_later
+
     available_slots = get_available_slots(db)
     available_count = len(available_slots)
 
-    # ── Case 3: No class today + no slots ────────────────────────────────────
-    if not has_class_today and available_count == 0:
+    # ── Case 3: No active/upcoming class + no slots ───────────────────────────
+    if not is_priority and available_count == 0:
         message = "You cannot park and you don't have classes for today"
         log = ParkingLog(
             student_id=request.student_id,
             slot_id=None,
             response_message=message,
-            has_class_today=has_class,
+            has_class_today=has_class_today,
         )
         db.add(log)
         db.commit()
-        return ParkingResponse(success=False, message=message, has_class_today=has_class)
+        return ParkingResponse(
+            success=False,
+            message=message,
+            has_class_today=has_class_today,
+        )
 
     # ── Case 1 & 2: Slot available ────────────────────────────────────────────
     if available_count > 0:
@@ -124,7 +144,7 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
 
         if has_class_now:
             message = "You may park and you have an ongoing class right now"
-        elif has_class_today:
+        elif has_class_later:
             message = "You may park and you have classes scheduled later today"
         else:
             message = "You may park but you don't have classes today"
@@ -133,7 +153,7 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
             student_id=request.student_id,
             slot_id=slot.slot_id,
             response_message=message,
-            has_class_today=has_class,
+            has_class_today=has_class_today,
         )
         db.add(log)
         db.commit()
@@ -143,27 +163,31 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
             success=True,
             message=message,
             slot_name=slot.slot_name,
-            has_class_today=has_class,
+            has_class_today=has_class_today,
         )
 
-    # ── Case 4: Has class but no slots ───────────────────────────────────────
+    # ── Case 4: Is priority but no slots ─────────────────────────────────────
     if has_class_now:
         message = "No slots available but you have an ongoing class. You may bring your vehicle and wait for an available slot."
     else:
         message = "No slots available but you have classes later today. You may bring your vehicle and wait for an available slot."
+
     log = ParkingLog(
         student_id=request.student_id,
         slot_id=None,
         response_message=message,
-        has_class_today=has_class,
+        has_class_today=has_class_today,
     )
     db.add(log)
     db.commit()
-    return ParkingResponse(success=False, message=message, has_class_today=has_class)
+    return ParkingResponse(
+        success=False,
+        message=message,
+        has_class_today=has_class_today,
+    )
 
 
 def release_parking_slot(db: Session, student_id: str) -> dict:
-    """Mark a student's current slot as available again."""
     log = (
         db.query(ParkingLog)
         .join(ParkingSlot, ParkingLog.slot_id == ParkingSlot.slot_id)
