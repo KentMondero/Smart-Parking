@@ -286,6 +286,12 @@ header {{visibility: hidden;}}
     color: {TEXT} !important;
     font-family: 'Space Mono', monospace !important;
 }}
+
+.stTextInput > div > div > input::placeholder {
+        color: {MUTED} !important;
+        opacity: 0.7 !important;
+}
+
 .stTextInput > div > div > input:focus {{ border-color: #6366f1 !important; box-shadow: 0 0 0 2px rgba(99,102,241,0.2) !important; }}
 .stButton > button {{
     background: linear-gradient(135deg, #6366f1, #8b5cf6) !important;
