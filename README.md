@@ -1,29 +1,35 @@
-# Park U — Smart Parking Management System
+# Park-U — Smart Parking Management System
 
-A full-stack university parking system built with **FastAPI** (backend), **SQLite** (database), and **Streamlit** (frontend dashboard).
+A university parking system built with **FastAPI** (backend), **SQLite** (database), and **Streamlit** (frontend dashboard).
 
 ---
 
 ## Folder Structure
 
 ```
-smart-parking/
+smart-parkingv2/
 ├── backend/
 │   ├── database/
-│   │   └── database.py        # SQLAlchemy engine + session
+│   │   ├── __init__.py
+│   │   └── database.py            # SQLAlchemy engine + session
 │   ├── models/
-│   │   ├── models.py          # ORM table definitions
-│   │   └── schemas.py         # Pydantic request/response models
+│   │   ├── __init__.py
+│   │   ├── models.py              # ORM table definitions
+│   │   └── schemas.py             # Pydantic request/response models
 │   ├── routers/
-│   │   ├── student_router.py  # /students endpoints
-│   │   ├── schedule_router.py # /schedules endpoints
-│   │   └── parking_router.py  # /parking endpoints + dashboard
+│   │   ├── __init__.py
+│   │   ├── student_router.py      # /students endpoints
+│   │   ├── schedule_router.py     # /schedules endpoints
+│   │   └── parking_router.py      # /parking endpoints + dashboard + profile
 │   ├── services/
-│   │   └── parking_service.py # Core business logic
-│   └── main.py                # FastAPI app entry point
+│   │   ├── __init__.py
+│   │   └── parking_service.py     # Core business logic
+│   ├── __init__.py
+│   └── main.py                    # FastAPI app entry point
 ├── frontend/
-│   └── app.py                 # Streamlit dashboard
-├── seed_data.py               # Sample data seeder
+│   ├── app.py                     # Streamlit dashboard
+│   └── Logo.png                   # University logo (header + browser tab)
+├── seed_data.py                   # Sample data seeder
 ├── requirements.txt
 └── README.md
 ```
@@ -41,13 +47,8 @@ pip install -r requirements.txt
 ### 2. Seed the database
 
 ```bash
-python seed_data.py
+python3 seed_data.py
 ```
-
-This creates:
-- **20 parking slots** (Slot-01 through Slot-20)
-- **8 sample students** with class schedules
-- Students with class today: STU001, STU002, STU003, STU005, STU007
 
 ### 3. Start the FastAPI backend
 
@@ -65,16 +66,41 @@ streamlit run frontend/app.py
 
 Dashboard opens at: [http://localhost:8501](http://localhost:8501)
 
+> Always run both commands from the project root folder (`smart-parkingv2/`) so the database path resolves correctly.
+
+---
+
+## 🔄 Resetting the Database
+
+To wipe all data and start fresh:
+
+```bash
+cd ~/smart-parkingv2
+rm smart_parking.db
+python3 seed_data.py
+uvicorn backend.main:app --reload --port 8000
+```
+
+> This permanently deletes all parking logs, slot statuses, and any students added through the app.
+
 ---
 
 ## Parking Decision Logic
 
-| Has Class Today | Slots Available | Result |
+The system evaluates two conditions on every request:
+- Does the student have a class **right now** or **later today**?
+- Are parking slots available?
+
+| Case | Condition | Result |
 |---|---|---|
-| ✅ Yes | ✅ Yes | **"You may park and you have classes today"** → Slot assigned |
-| ❌ No | ✅ Yes | **"You may park but you don't have classes today"** → Slot assigned |
-| ❌ No | ❌ No | **"You cannot park and you don't have classes for today"** → Denied |
-| ✅ Yes | ❌ No | **"No slots available"** → Denied (rare edge case) |
+| 1a | Class ongoing now + slot available | **"You may park and you have an ongoing class right now"** |
+| 1b | Class later today + slot available | **"You may park and you have classes scheduled later today"** |
+| 2 | No active/upcoming class + slot available | **"You may park but you don't have classes today"** |
+| 3 | No active/upcoming class + no slots | **"You cannot park and you don't have classes for today"** |
+| 4a | Class ongoing now + no slots | **"No slots available but you have an ongoing class. You may bring your vehicle and wait."** |
+| 4b | Class later today + no slots | **"No slots available but you have classes later today. You may bring your vehicle and wait."** |
+
+> **Priority rule:** A student is considered priority only if their class is **currently ongoing** or **still upcoming** — classes that have already ended do not grant priority status.
 
 ---
 
@@ -100,19 +126,43 @@ Dashboard opens at: [http://localhost:8501](http://localhost:8501)
 | POST | `/parking/request` | Request a parking slot |
 | POST | `/parking/release/{student_id}` | Release a slot |
 | GET | `/parking/slots` | All slots |
-| GET | `/parking/slots/available` | Available slots |
-| GET | `/parking/slots/occupied` | Occupied slots |
-| GET | `/parking/logs` | Recent parking logs |
-| GET | `/parking/dashboard` | Dashboard statistics |
+| GET | `/parking/slots/available` | Available slots only |
+| GET | `/parking/slots/occupied` | Occupied slots only |
+| GET | `/parking/logs` | Recent parking logs (last 100) |
+| GET | `/parking/profile/{student_id}` | Full parking history for one student |
+| GET | `/parking/dashboard` | Live dashboard statistics |
 
 ---
 
 ## Frontend Features
 
-- **Live Stats Bar** — Total / Available / Occupied slot counts
-- **Visual Slot Map** — Green = available, Red = occupied
-- **Parking Request Form** — Enter ID + Name, get instant response
-- **Release Slot Button** — Free up your slot when leaving
-- **Currently Parked Panel** — See who's in the lot right now
-- **Parking Logs Table** — Full request history with class status badges
-- **Auto-Refresh** — Dashboard updates every 5 seconds automatically
+### Dashboard Tab
+- **Capacity bar** — shows percentage of slots used, color shifts green → yellow → red
+- **Live stat cards** — Total, Available, and Occupied slot counts
+- **Parking request form** — Enter Student ID and Name to request a slot
+- **Side-by-side buttons** — Request Parking and Release My Slot shown together
+- **Color-coded slot map** — 🟢 Available, 🔴 Occupied, auto-refreshes every 5 seconds
+- **Dark / Light mode toggle** — defaults to light mode, toggle to dark anytime
+
+### Admin Tab (Password Protected)
+- **Admin login gate** — password required to access; session persists until logout
+- **Logout button** — locks the admin section when done
+- **Parking logs table** — full request history with student name, slot, time, and class status badges
+- **Search / filter logs** — filter by student name, ID, or date (`YYYY-MM-DD`)
+- **Export to CSV** — download all parking logs as a timestamped `.csv` file
+- **Student profile lookup** — search any student by ID to view their stats and full parking history
+- **Profile stats** — total requests, approved count, denied count per student
+
+---
+
+## Sample Students for Testing
+
+Use these IDs from your seed data to test all parking cases:
+
+| Student ID | Name | Has Class Today |
+|---|---|---|
+| `2024-200354` | Kent Mondero | Depends on schedule |
+| `2024-200372` | Jerome Santos | Depends on schedule |
+| `2024-200413` | Rafael Cutamora | Depends on schedule |
+| `2024-200374` | Lorenz Mangalino | Depends on schedule |
+| `1234` | (demo student) | Every day (all 7 days seeded) |
