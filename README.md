@@ -70,7 +70,7 @@ Dashboard opens at: [http://localhost:8501](http://localhost:8501)
 
 ---
 
-## 🔄 Resetting the Database
+## Resetting the Database
 
 To wipe all data and start fresh:
 
