@@ -68,6 +68,7 @@ def get_available_slots(db: Session):
     return (
         db.query(ParkingSlot)
         .filter(ParkingSlot.status == "available")
+        .order_by(ParkingSlot.slot_id)
         .all()
     )
 

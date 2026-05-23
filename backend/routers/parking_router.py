@@ -143,3 +143,17 @@ def dashboard_stats(db: Session = Depends(get_db)):
         occupied_slots=occupied,
         current_parked_students=current_parked,
     )
+
+@router.get("/slots/available", response_model=list[ParkingSlotOut])
+def available_slots(db: Session = Depends(get_db)):
+    return db.query(ParkingSlot).filter(ParkingSlot.status == "available").order_by(ParkingSlot.slot_id).all()
+
+
+@router.get("/slots/occupied", response_model=list[ParkingSlotOut])
+def occupied_slots(db: Session = Depends(get_db)):
+    return db.query(ParkingSlot).filter(ParkingSlot.status == "occupied").order_by(ParkingSlot.slot_id).all()
+
+
+@router.get("/slots", response_model=list[ParkingSlotOut])
+def all_slots(db: Session = Depends(get_db)):
+    return db.query(ParkingSlot).filter().order_by(ParkingSlot.slot_id).all()
