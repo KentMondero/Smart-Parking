@@ -7,9 +7,27 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from backend.database.database import SessionLocal, engine
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from backend.models.models import Base, Student, ClassSchedule, ParkingSlot
 from datetime import datetime
+
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "sqlite:///./smart_parking.db"  # fallback for local
+)
+
+# Fix Render's postgres:// to postgresql://
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+# Create engine based on database type
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URL)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
 
@@ -76,28 +94,28 @@ schedules = [
     {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
     # Lorenz
-    {"student_id": "2024-200413", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
+    {"student_id": "2024-200374", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
+    {"student_id": "2024-200374", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200374", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200374", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
+    {"student_id": "2024-200374", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
+    {"student_id": "2024-200374", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
    # Lyca
-    {"student_id": "2024-200413", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
+    {"student_id": "2024-200399", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
+    {"student_id": "2024-200399", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200399", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200399", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
+    {"student_id": "2024-200399", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
+    {"student_id": "2024-200399", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
    # Joshua
-    {"student_id": "2024-200413", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
-    {"student_id": "2024-200413", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200413", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
-    {"student_id": "2024-200413", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
+    {"student_id": "2024-200382", "subject": "Networking 1",           "day_of_week": "Monday",  "start_time": "13:00", "end_time": "16:00"},
+    {"student_id": "2024-200382", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200382", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
+    {"student_id": "2024-200382", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
+    {"student_id": "2024-200382", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
+    {"student_id": "2024-200382", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 ]
 
 for sc in schedules:
@@ -113,6 +131,6 @@ db.commit()
 db.close()
 
 print("Seed data inserted successfully!")
-print(f"   • 20 parking slots created")
+print(f"   • 50 parking slots created")
 print(f"   • {len(students)} students registered")
 print(f"   • {len(schedules)} class schedules added")
