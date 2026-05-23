@@ -324,7 +324,9 @@ def api_get(path):
 def api_post(path, payload={}):
     try:
         r = requests.post(f"{API_BASE}{path}", json=payload, timeout=5)
-        return r.json(), r.status_code
+        if r.content:
+            return r.json(), r.status_code
+        return {"detail": "Empty response from server"}, r.status_code
     except Exception as e:
         return {"detail": str(e)}, 500
 
