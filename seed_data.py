@@ -56,7 +56,7 @@ schedules = [
     {"student_id": "2024-200354", "subject": "Quantitative Methods",   "day_of_week": "Monday",  "start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200354", "subject": "Multimedia",             "day_of_week": "Thursday","start_time": "09:00", "end_time": "12:00"},
     {"student_id": "2024-200354", "subject": "Computer Graphics",      "day_of_week": "Thursday","start_time": "13:00", "end_time": "15:00"},
-    {"student_id": "2024-200354", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "70:00", "end_time": "12:00"},
+    {"student_id": "2024-200354", "subject": "Integrative Programming","day_of_week": "Saturday","start_time": "07:00", "end_time": "12:00"},
     {"student_id": "2024-200354", "subject": "PE04",                   "day_of_week": "Saturday","start_time": "13:00", "end_time": "15:00"},
 
     # Jerome 
