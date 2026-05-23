@@ -65,6 +65,7 @@ def student_has_class_later(db: Session, student_id: str) -> bool:
 
 
 def get_available_slots(db: Session):
+    db.expire_all()
     return (
         db.query(ParkingSlot)
         .filter(ParkingSlot.status == "available")
@@ -120,6 +121,7 @@ def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResp
     # Priority = has an ongoing OR upcoming class (not already finished)
     is_priority = has_class_now or has_class_later
 
+    db.expire_all()  
     available_slots = get_available_slots(db)
     available_count = len(available_slots)
 
