@@ -593,7 +593,7 @@ with tab_profile:
         with search_col:
             search = st.text_input("Search", placeholder="Name, Student ID, or date (YYYY-MM-DD)", key="log_search", label_visibility="collapsed")
         with export_col:
-            if st.button("Download Logs"):
+            if st.button("Export Logs"):
                 if logs:
                     buf = io.StringIO()
                     writer = csv.DictWriter(buf, fieldnames=["LOG NO.","STUDENT ID","NAME","SLOT","DATE&TIME","SCHEDULE"])
