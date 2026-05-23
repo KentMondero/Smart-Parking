@@ -47,7 +47,7 @@ def occupied_slots(db: Session = Depends(get_db)):
 
 @router.get("/slots", response_model=list[ParkingSlotOut])
 def all_slots(db: Session = Depends(get_db)):
-    return db.query(ParkingSlot).all()
+    return db.query(ParkingSlot).order_by(ParkingSlot.slot_id).all()
 
 
 @router.get("/logs", response_model=list[ParkingLogOut])
