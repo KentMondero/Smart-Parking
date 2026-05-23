@@ -55,7 +55,7 @@ def parking_logs(db: Session = Depends(get_db)):
     logs = (
         db.query(ParkingLog)
         .order_by(ParkingLog.request_time.desc())
-        .limit(100)
+        .limit(500)
         .all()
     )
     result = []

@@ -1,9 +1,3 @@
-"""
-Smart Parking Management System — Streamlit Frontend (v2)
-New: dark/light mode toggle, university logo, search/filter logs,
-     CSV export, parking duration tracker, student profile page.
-Run: streamlit run frontend/app.py
-"""
 import streamlit as st
 import requests
 import time
