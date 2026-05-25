@@ -1,6 +1,6 @@
 # Park-U — Smart Parking Management System
 
-A university parking system built with **FastAPI** (backend), **SQLite** (database), and **Streamlit** (frontend dashboard).
+A university parking system built with **FastAPI** (backend), **SQLite** & **PostgreSQL** (database), and **Streamlit** (frontend dashboard).
 
 ---
 
