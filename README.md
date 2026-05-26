@@ -202,4 +202,4 @@ Use these IDs from your seed data to test all parking cases:
 | `2024-200374` | Lorenz Mangalino | Depends on schedule |
 | `2024-200399` | Lyca Jangas | Depends on schedule |
 | `2024-200382` | Joshua Malana | Depends on schedule |
-| `1234` | (demo student) | Every day (all 7 days seeded) |
+| `1234` | Every day (all 7 days seeded) |
