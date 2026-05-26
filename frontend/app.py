@@ -350,7 +350,7 @@ with header_col:
             <div>
                 <p style="font-size:2.5rem;font-weight:800;letter-spacing:-0.5px;color:#ffffff;margin:0;">Park-U</p>
                 <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:3px 0 0 0;font-family:'Space Mono',monospace;">
-                    Smart Parking Management System &nbsp;|&nbsp; {current_date} &nbsp;|&nbsp; {current_time} PST
+                    Smart Parking Management System &nbsp;|&nbsp; {current_date} &nbsp;|&nbsp; {current_time}
                 </p>
             </div>
         </div>
