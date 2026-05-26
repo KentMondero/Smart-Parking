@@ -346,7 +346,7 @@ with header_col:
             <div>
                 <p style="font-size:2.5rem;font-weight:800;letter-spacing:-0.5px;color:#ffffff;margin:0;">Park-U</p>
                 <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:3px 0 0 0;font-family:'Space Mono',monospace;">
-                    Smart Parking Management System &nbsp;|&nbsp; {datetime.now(PH_TZ).strftime("%A, %B %d %Y")}
+                    Smart Parking Management System &nbsp;|&nbsp; {datetime.now(PH_TZ).strftime("%A, %B %d %Y")}                
                 </p>
             </div>
         </div>

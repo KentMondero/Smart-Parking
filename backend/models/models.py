@@ -2,7 +2,9 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, T
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from backend.database.database import Base
+import pytz
 
+PH_TZ = pytz.timezone("Asia/Manila")
 
 class Student(Base):
     __tablename__ = "students"
@@ -45,7 +47,7 @@ class ParkingLog(Base):
     log_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     student_id = Column(String, ForeignKey("students.student_id"), nullable=False)
     slot_id = Column(Integer, ForeignKey("parking_slots.slot_id"), nullable=True)
-    request_time = Column(DateTime, default=datetime.now)
+    request_time = Column(DateTime, default=lambda: datetime.now(PH_TZ).replace(tzinfo=None))
     response_message = Column(String, nullable=False)
     has_class_today = Column(Boolean, default=False)
 
