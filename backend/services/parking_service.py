@@ -75,17 +75,43 @@ def get_available_slots(db: Session):
 
 
 def is_student_already_parked(db: Session, student_id: str) -> bool:
-    active_log = (
+    """
+    Check if student is currently parked by finding their most recent
+    log entry and verifying that specific slot is still occupied.
+    """
+    latest_log = (
         db.query(ParkingLog)
-        .join(ParkingSlot, ParkingLog.slot_id == ParkingSlot.slot_id, isouter=True)
         .filter(
             ParkingLog.student_id == student_id,
+            ParkingLog.slot_id.isnot(None),
+        )
+        .order_by(ParkingLog.request_time.desc())
+        .first()
+    )
+
+    if not latest_log or not latest_log.slot_id:
+        return False
+
+    slot = (
+        db.query(ParkingSlot)
+        .filter(
+            ParkingSlot.slot_id == latest_log.slot_id,
             ParkingSlot.status == "occupied",
         )
         .first()
     )
-    return active_log is not None
 
+    if not slot:
+        return False
+
+    most_recent_log_for_slot = (
+        db.query(ParkingLog)
+        .filter(ParkingLog.slot_id == slot.slot_id)
+        .order_by(ParkingLog.request_time.desc())
+        .first()
+    )
+
+    return most_recent_log_for_slot.student_id == student_id
 
 def process_parking_request(db: Session, request: ParkingRequest) -> ParkingResponse:
     """
