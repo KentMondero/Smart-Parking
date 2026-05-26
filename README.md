@@ -70,15 +70,50 @@ Dashboard opens at: [http://localhost:8501](http://localhost:8501)
 
 ---
 
+## Cloud Deployment (Render)
+
+The app is deployed at: https://park-u.onrender.com
+API docs available at: https://park-u.onrender.com/docs
+
+### Setup
+1. Create a PostgreSQL database on Render
+2. Add environment variable in your web service:
+   - Key: `DATABASE_URL`
+   - Value: Internal Database URL from Render
+3. Push to GitHub — Render auto-deploys on every push
+
+### Seed the cloud database from local machine
+```bash
+DATABASE_URL="postgresql://...external_url..." python3 seed_data.py
+```
+
+> Use the **External Database URL** when seeding from your local machine.
+> Use the **Internal Database URL** as the environment variable on Render.
+
+---
+
 ## Resetting the Database
 
 To wipe all data and start fresh:
 
 ```bash
-cd ~/smart-parkingv2
+# Local (SQLite)
 rm smart_parking.db
 python3 seed_data.py
-uvicorn backend.main:app --reload --port 8000
+
+# Cloud (PostgreSQL on Render)
+# Step 1 — Clear all tables
+DATABASE_URL="postgresql://...external_url..." python3 -c "
+from sqlalchemy import create_engine, text
+engine = create_engine('postgresql://...external_url...')
+with engine.connect() as conn:
+    conn.execute(text('TRUNCATE TABLE parking_logs, parking_slots, class_schedules, students RESTART IDENTITY CASCADE'))
+    conn.commit()
+print('Database cleared!')
+"
+
+# Step 2 — Re-seed
+DATABASE_URL="postgresql://...external_url..." python3 seed_data.py
 ```
 
 > This permanently deletes all parking logs, slot statuses, and any students added through the app.
@@ -128,7 +163,7 @@ The system evaluates two conditions on every request:
 | GET | `/parking/slots` | All slots |
 | GET | `/parking/slots/available` | Available slots only |
 | GET | `/parking/slots/occupied` | Occupied slots only |
-| GET | `/parking/logs` | Recent parking logs (last 100) |
+| GET | `/parking/logs` | Recent parking logs (last 500) |
 | GET | `/parking/profile/{student_id}` | Full parking history for one student |
 | GET | `/parking/dashboard` | Live dashboard statistics |
 
@@ -165,4 +200,6 @@ Use these IDs from your seed data to test all parking cases:
 | `2024-200372` | Jerome Santos | Depends on schedule |
 | `2024-200413` | Rafael Cutamora | Depends on schedule |
 | `2024-200374` | Lorenz Mangalino | Depends on schedule |
+| `2024-200399` | Lyca Jangas | Depends on schedule |
+| `2024-200382` | Joshua Malana | Depends on schedule |
 | `1234` | (demo student) | Every day (all 7 days seeded) |
