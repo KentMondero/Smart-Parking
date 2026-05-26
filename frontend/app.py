@@ -338,7 +338,11 @@ def fetch_logs():
 
 # ═════════════════════════════ HEADER ══════════════════════
 header_col, toggle_col = st.columns([5, 1])
-with header_col: 
+with header_col:
+    now_ph = datetime.now(PH_TZ)
+    current_date = now_ph.strftime("%A, %B %d %Y")
+    current_time = now_ph.strftime("%I:%M %p")
+
     st.markdown(f"""
     <div class="park-header">
         <div style="display:flex;align-items:center;gap:16px;">
@@ -346,7 +350,7 @@ with header_col:
             <div>
                 <p style="font-size:2.5rem;font-weight:800;letter-spacing:-0.5px;color:#ffffff;margin:0;">Park-U</p>
                 <p style="font-size:0.82rem;color:rgba(255,255,255,0.65);margin:3px 0 0 0;font-family:'Space Mono',monospace;">
-                    Smart Parking Management System &nbsp;|&nbsp; {datetime.now(PH_TZ).strftime("%A, %B %d %Y")}                
+                    Smart Parking Management System &nbsp;|&nbsp; {current_date} &nbsp;|&nbsp; {current_time} PST
                 </p>
             </div>
         </div>
@@ -360,7 +364,6 @@ with toggle_col:
     if st.button(theme_label, key="theme_toggle"):
         st.session_state.dark_mode = not st.session_state.dark_mode
         st.rerun()
-
 
 # ════════════════════════════ TABS ═════════════════════════════════════════════════
 tab_dashboard, tab_profile = st.tabs(["Dashboard", "Student Profile"])
