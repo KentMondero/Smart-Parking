@@ -414,8 +414,8 @@ with tab_dashboard:
     with left:
         # Parking request form
         st.markdown('<p class="section-title">Request Parking</p>', unsafe_allow_html=True)
-        student_id   = st.text_input("Student ID",  placeholder="input here", key="sid")
-        student_name = st.text_input("Full Name",   placeholder="input here",  key="sname")
+        student_id   = st.text_input("Student ID",  placeholder="20XX-100XXX", key="sid")
+        student_name = st.text_input("Full Name",   placeholder="Juan Dela Cruz",  key="sname")
 
         btn_left, btn_right = st.columns(2)
         with btn_left:
@@ -507,7 +507,7 @@ with tab_profile:
         st.markdown('<p class="section-title">Admin Access Required</p>', unsafe_allow_html=True)
         st.markdown(f'<div style="color:{MUTED};font-size:0.85rem;margin-bottom:16px;">This section is restricted to authorized administrators only.</div>', unsafe_allow_html=True)
 
-        admin_pass = st.text_input("Admin Password", type="password", placeholder="input here", key="admin_pass")
+        admin_pass = st.text_input("Admin Password", type="password", placeholder="******", key="admin_pass")
 
         if st.button("Login as Admin", key="admin_login"):
             if admin_pass == "admin1234":
