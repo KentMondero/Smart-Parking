@@ -464,17 +464,8 @@ with tab_dashboard:
     with right:
         st.markdown('<p class="section-title">Parking Slot Map</p>', unsafe_allow_html=True)
         
-        # 1. Fetch data
         slots = fetch_slots()
         
-        # 2. ⚠️ LIVE DEBUG WINDOW (Remove this once fixed)
-        st.write("---")
-        st.subheader("🔍 Backend Debug Inspector")
-        st.write("**Data Type:**", type(slots).__name__)
-        st.write("**Raw Content:**", slots)
-        st.write("---")
-        
-        # 3. Render logic
         if slots:
             slot_html = '<div class="slot-grid">'
             # If slots is a dictionary wrapper, extract the list
