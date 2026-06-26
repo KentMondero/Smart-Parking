@@ -459,23 +459,43 @@ with tab_dashboard:
                         st.markdown(f'<div class="response-success">{result.get("message")}</div>', unsafe_allow_html=True)
                     else:
                         st.markdown(f'<div class="response-error">{result.get("detail","Error")}</div>', unsafe_allow_html=True)
+
     # ── RIGHT COLUMN ──────────────────────────────────────────────────────────
     with right:
         # Slot map
         st.markdown('<p class="section-title">Parking Slot Map</p>', unsafe_allow_html=True)
-        slots = fetch_slots()
+        
+        raw_slots = fetch_slots()
+        
+        # Check if the API wrapped the response inside a dictionary key like {"slots": [...]}
+        if isinstance(raw_slots, dict) and "slots" in raw_slots:
+            slots = raw_slots["slots"]
+        elif isinstance(raw_slots, list):
+            slots = raw_slots
+        else:
+            slots = []
+
         if slots:
             slot_html = '<div class="slot-grid">'
             for s in slots:
-                css  = "slot-available" if s["status"] == "available" else "slot-occupied"
-                icon = "🟢" if s["status"] == "available" else "🔴"
-                slot_html += f'<div class="slot-box {css}">{icon}<br>{s["slot_name"]}</div>'
+                # Use .get() to prevent hard KeyErrors if a column name is slightly off
+                slot_name = s.get("slot_name", "Unknown")
+                raw_status = str(s.get("status", "available")).strip().lower()
+                
+                # Case-insensitive checks
+                is_available = (raw_status == "available")
+                
+                css  = "slot-available" if is_available else "slot-occupied"
+                icon = "🟢" if is_available else "🔴"
+                
+                slot_html += f'<div class="slot-box {css}">{icon}<br>{slot_name}</div>'
+                
             slot_html += "</div>"
             st.markdown(slot_html, unsafe_allow_html=True)
             st.markdown(f'<div style="display:flex;gap:20px;margin-top:10px;font-size:0.72rem;color:{MUTED};font-family:\'Space Mono\',monospace;"><span>🟢 Available</span><span>🔴 Occupied</span></div>', unsafe_allow_html=True)
         else:
-            st.info("Could not load slot data. Ensure the API is running.")
-
+            st.info("No parking slots found in the database.")
+            
     # ── Footer / refresh ──────────────────────────────────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
     fc1, fc2 = st.columns([3, 1])
