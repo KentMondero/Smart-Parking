@@ -462,40 +462,39 @@ with tab_dashboard:
 
     # ── RIGHT COLUMN ──────────────────────────────────────────────────────────
     with right:
-        # Slot map
         st.markdown('<p class="section-title">Parking Slot Map</p>', unsafe_allow_html=True)
         
-        raw_slots = fetch_slots()
+        # 1. Fetch data
+        slots = fetch_slots()
         
-        # Check if the API wrapped the response inside a dictionary key like {"slots": [...]}
-        if isinstance(raw_slots, dict) and "slots" in raw_slots:
-            slots = raw_slots["slots"]
-        elif isinstance(raw_slots, list):
-            slots = raw_slots
-        else:
-            slots = []
-
+        # 2. ⚠️ LIVE DEBUG WINDOW (Remove this once fixed)
+        st.write("---")
+        st.subheader("🔍 Backend Debug Inspector")
+        st.write("**Data Type:**", type(slots).__name__)
+        st.write("**Raw Content:**", slots)
+        st.write("---")
+        
+        # 3. Render logic
         if slots:
             slot_html = '<div class="slot-grid">'
-            for s in slots:
-                # Use .get() to prevent hard KeyErrors if a column name is slightly off
-                slot_name = s.get("slot_name", "Unknown")
-                raw_status = str(s.get("status", "available")).strip().lower()
-                
-                # Case-insensitive checks
-                is_available = (raw_status == "available")
-                
-                css  = "slot-available" if is_available else "slot-occupied"
-                icon = "🟢" if is_available else "🔴"
-                
-                slot_html += f'<div class="slot-box {css}">{icon}<br>{slot_name}</div>'
-                
-            slot_html += "</div>"
-            st.markdown(slot_html, unsafe_allow_html=True)
-            st.markdown(f'<div style="display:flex;gap:20px;margin-top:10px;font-size:0.72rem;color:{MUTED};font-family:\'Space Mono\',monospace;"><span>🟢 Available</span><span>🔴 Occupied</span></div>', unsafe_allow_html=True)
-        else:
-            st.info("No parking slots found in the database.")
+            # If slots is a dictionary wrapper, extract the list
+            list_of_slots = slots["slots"] if isinstance(slots, dict) and "slots" in slots else slots
             
+            if isinstance(list_of_slots, list):
+                for s in list_of_slots:
+                    slot_name = s.get("slot_name", "Unknown")
+                    status = str(s.get("status", "available")).lower()
+                    
+                    css  = "slot-available" if status == "available" else "slot-occupied"
+                    icon = "🟢" if status == "available" else "🔴"
+                    slot_html += f'<div class="slot-box {css}">{icon}<br>{slot_name}</div>'
+                slot_html += "</div>"
+                st.markdown(slot_html, unsafe_allow_html=True)
+            else:
+                st.warning("Extracted data is not a list structure.")
+        else:
+            st.info("Could not load slot data. Ensure the API is running.")
+
     # ── Footer / refresh ──────────────────────────────────────────────────────
     st.markdown("<br>", unsafe_allow_html=True)
     fc1, fc2 = st.columns([3, 1])
